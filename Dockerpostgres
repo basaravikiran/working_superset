@@ -1,6 +1,0 @@
-FROM postgres:12.8
-COPY superset.sql /docker-entrypoint-initdb.d/
-ENV POSTGRES_USER=superset
-ENV POSTGRES_PASSWORD=superset
-ENV POSTGRES_DB=superset
-
