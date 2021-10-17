@@ -1,0 +1,37 @@
+version: '3'
+services:
+  redis:
+    image: redis
+    restart: always
+    container_name: radis_cache
+    volumes:
+      - redis:/data
+
+  postgres:
+    image: postgres:12.8
+    restart: always
+    container_name: metadata_db
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - ./migrations/superset.sql:/docker-entrypoint-initdb.d/superset.sql
+    environment:
+      POSTGRES_DB: superset
+      POSTGRES_PASSWORD: superset
+      POSTGRES_USER: superset
+    ports:
+      - "5432:5432"
+  superset:
+    build:
+      context: .
+      dockerfile: Dockersuperset
+    restart: always
+    container_name: superset_app
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "8088:8088"
+
+volumes:
+  postgres:
+  redis:
